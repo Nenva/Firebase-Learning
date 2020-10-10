@@ -18,8 +18,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-const val REQUEST_CODE_SIGN_IN = 0
-
 class LoginActivity : AppCompatActivity() {
 
     lateinit var auth: FirebaseAuth

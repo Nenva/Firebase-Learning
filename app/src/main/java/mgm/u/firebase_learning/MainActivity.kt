@@ -18,14 +18,13 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var auth: FirebaseAuth
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         auth = FirebaseAuth.getInstance()
 
-        buttonUpdate.setOnClickListener {
-            updateProfile()
+        textResult.setOnClickListener {
+            checkLoggedInState()
         }
 
         textLogout.setOnClickListener {
@@ -34,38 +33,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateProfile() {
-            auth.currentUser?.let { user ->
-                val username = editUsernameUpdated.text.toString()
-            val photoURI = Uri.parse("android.resources://$packageName/${R.drawable.random}")
-            val profileUpdates = UserProfileChangeRequest.Builder()
-                .setDisplayName(username)
-                .setPhotoUri(photoURI)
-                .build()
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    user.updateProfile(profileUpdates).await()
-                    withContext(Dispatchers.Main) {
-                        checkLoggedInState()
-                        Toast.makeText(this@MainActivity, "Successfully updated!", Toast.LENGTH_LONG).show()
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
-    }
-
-    fun checkLoggedInState() {
+    private fun checkLoggedInState() {
         val user = auth.currentUser
-        val username = editUsernameUpdated.text.toString()
         if (user == null) {
             textResult.text = "You are not logged in"
         } else {
-            textResult.text = "Welcome $username"
+            textResult.text = "Welcome!"
             editImageUpdated.setImageURI(user.photoUrl)
         }
     }
